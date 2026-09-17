@@ -15,29 +15,72 @@
 #     SEED_DATA = "INSERT INTO name (...)" or None
 #----------------------------------------------------------------------------
 
-class CreatureTable:
+class MbTable:
 
-    NAME = "creatures"
+    NAME = "mbs"
 
     SCHEMA = """
-        CREATE TABLE creatures (
-            id      INTEGER PRIMARY KEY AUTOINCREMENT,
-            species TEXT NOT NULL,
-            name    TEXT NOT NULL
+        CREATE TABLE mbs (
+            id     INTEGER PRIMARY KEY AUTOINCREMENT,
+            name   TEXT NOT NULL,
+            socket TEXT NOT NULL,
+            ram    TEXT NOT NULL
         )
     """
 
     SEED_DATA = """
-        INSERT INTO creatures (species, name)
+        INSERT INTO mbs (name, socket, ram)
         VALUES
-            ("Dragon",  "Pippa"),
-            ("Unicorn", "Barry"),
-            ("Vampire", "Helen")
+            ("ASUS Uber",    "BIG",   "DDR7"),
+            ("ASUS Weak",    "SMALL", "DDR1"),
+            ("ASUS Stellar", "BIG",   "DDR8")
     """
 
-# Add more table classes here...
+class CpuTable:
 
+    NAME = "cpus"
 
+    SCHEMA = """
+        CREATE TABLE cpus (
+            id     INTEGER PRIMARY KEY AUTOINCREMENT,
+            name   TEXT NOT NULL,
+            socket TEXT NOT NULL
+        )
+    """
+
+    SEED_DATA = """
+        INSERT INTO cpus (name, socket)
+        VALUES
+            ("Intel Plopper", "SMALL"),
+            ("Intel Ripper",  "BIG"),
+            ("AMD Crud",      "SMALL"),
+            ("AMD Zoomer",    "BIG")
+    """
+
+class RamTable:
+
+    NAME = "rams"
+
+    SCHEMA = """
+        CREATE TABLE rams (
+            id     INTEGER PRIMARY KEY AUTOINCREMENT,
+            name   TEXT NOT NULL,
+            type   TEXT NOT NULL
+        )
+    """
+
+    SEED_DATA = """
+        INSERT INTO rams (name, type)
+        VALUES
+            ("Jim's Awesome RAM",    "DDR8"),
+            ("Jim's Special RAM",    "DDR7"),
+            ("Jim's Fast RAM",       "DDR5"),
+            ("Jim's Basic RAM",      "DDR1"),
+            ("Powerful Awesome RAM", "DDR8"),
+            ("Powerful Special RAM", "DDR7"),
+            ("Powerful Fast RAM",    "DDR5"),
+            ("Powerful Basic RAM",   "DDR1")
+    """
 
 #----------------------------------------------------------------------------
 # Table registry
@@ -55,7 +98,8 @@ class CreatureTable:
 #----------------------------------------------------------------------------
 
 TABLES = [
-    CreatureTable,
-    # Add more tables here...
+    MbTable,
+    CpuTable,
+    RamTable
 ]
 

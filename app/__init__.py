@@ -17,6 +17,58 @@ app = Flask(__name__)
 
 
 #===========================================================
+# Helper Functions
+#===========================================================
+
+def get_mb():
+    mb = None
+    mb_id = session.get("mb", None)
+
+    with connect_db() as db:
+        sql = """
+            SELECT id, name, socket, ram
+            FROM mbs
+            WHERE id=?
+        """
+        params = (mb_id, )
+        mb = db.execute(sql, params).fetchone()
+
+    return mb
+
+
+def get_cpu():
+    cpu = None
+    cpu_id = session.get("cpu", None)
+
+    with connect_db() as db:
+        sql = """
+            SELECT id, name, socket
+            FROM cpus
+            WHERE id=?
+        """
+        params = (cpu_id, )
+        cpu = db.execute(sql, params).fetchone()
+
+    return cpu
+
+
+def get_ram():
+    ram = None
+    ram_id = session.get("ram", None)
+
+    with connect_db() as db:
+        sql = """
+            SELECT id, name
+            FROM rams
+            WHERE id=?
+        """
+        params = (ram_id, )
+        ram = db.execute(sql, params).fetchone()
+
+    return ram
+
+
+#===========================================================
 # App Routes Handlers
 #===========================================================
 
@@ -25,37 +77,152 @@ app = Flask(__name__)
 #-----------------------------------------------------------
 @app.get("/")
 def show_welcome():
-    return render_template("pages/welcome.jinja")
+    # Create empty config in session
+    if not session.get("mb"):
+        session["mb"]  = None
+        session["cpu"] = None
+        session["ram"] = None
+
+    mb  = get_mb()
+    cpu = get_cpu()
+    ram = get_ram()
+
+    return render_template(
+        "pages/show_config.jinja",
+        mb = mb,
+        cpu = cpu,
+        ram = ram
+    )
 
 
 #-----------------------------------------------------------
-# Creature list page - Show all the creatures
+# Config - Pick MB
 #-----------------------------------------------------------
-@app.get("/creatures")
-def show_all_creatures():
+@app.get("/config/mb")
+def config_pick_mb():
+
+    mb  = get_mb()
+    cpu = get_cpu()
+    ram = get_ram()
+
     with connect_db() as db:
         sql = """
-            SELECT id, species, name
-            FROM creatures
+            SELECT id, name, socket, ram
+            FROM mbs
         """
         params = ()
-        creatures = db.execute(sql, params).fetchall()
+        mbs = db.execute(sql, params).fetchall()
 
-        return render_template("pages/creature_list.jinja", creatures=creatures)
+        return render_template(
+            "pages/pick_mb.jinja",
+            mb = mb,
+            cpu = cpu,
+            ram = ram,
+            mbs = mbs
+        )
 
 
 #-----------------------------------------------------------
-# Help page - Show some help
+# Config - Process MB
 #-----------------------------------------------------------
-@app.get("/help")
-def show_help():
+@app.post("/config/mb")
+def config_process_mb():
+    mb_id = request.form.get("mb")
+    session["mb"] = int(mb_id)
+    session["cpu"] = None
+    session["ram"] = None
 
-    flash("Flash test message")
-    flash("Flash test message with a longer bit of text")
-    flash("Success test message", "success")
-    flash("Error test message", "error")
+    return redirect("/config/cpu")
 
-    return render_template("pages/help.jinja")
+
+#-----------------------------------------------------------
+# Config - Pick CPU
+#-----------------------------------------------------------
+@app.get("/config/cpu")
+def config_pick_cpu():
+
+    mb  = get_mb()
+    cpu = get_cpu()
+    ram = get_ram()
+
+    if not mb:
+        flash("Choose a suitable MB first!", "error")
+        return redirect("/config/mb")
+
+    with connect_db() as db:
+        socket = mb.get("socket")
+
+        sql = """
+            SELECT id, name, socket
+            FROM cpus
+            WHERE socket=?
+        """
+        params = (socket, )
+        cpus = db.execute(sql, params).fetchall()
+
+        return render_template(
+            "pages/pick_cpu.jinja",
+            mb = mb,
+            cpu = cpu,
+            ram = ram,
+            cpus = cpus
+        )
+
+
+#-----------------------------------------------------------
+# Config - Process CPU
+#-----------------------------------------------------------
+@app.post("/config/cpu")
+def config_process_cpu():
+    cpu_id = request.form.get("cpu")
+    session["cpu"] = int(cpu_id)
+
+    return redirect("/config/ram")
+
+
+#-----------------------------------------------------------
+# Config - Pick RAM
+#-----------------------------------------------------------
+@app.get("/config/ram")
+def config_pick_ram():
+
+    mb  = get_mb()
+    cpu = get_cpu()
+    ram = get_ram()
+
+    if not mb:
+        flash("Choose a suitable MB first!", "error")
+        return redirect("/config/mb")
+
+    with connect_db() as db:
+        ram = mb.get("ram")
+
+        sql = """
+            SELECT id, name, type
+            FROM rams
+            WHERE type=?
+        """
+        params = (ram, )
+        rams = db.execute(sql, params).fetchall()
+
+        return render_template(
+            "pages/pick_ram.jinja",
+            mb = mb,
+            cpu = cpu,
+            ram = ram,
+            rams = rams
+        )
+
+
+#-----------------------------------------------------------
+# Config - Process RAM
+#-----------------------------------------------------------
+@app.post("/config/ram")
+def config_process_ram():
+    ram_id = request.form.get("ram")
+    session["ram"] = int(ram_id)
+
+    return redirect("/")
 
 
 #===========================================================

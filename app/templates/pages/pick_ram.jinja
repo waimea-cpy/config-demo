@@ -1,0 +1,29 @@
+{#=====================================================
+  Select RAM Form
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block content %}
+
+    {% include "partials/config.jinja" %}
+
+    <form method="post" action="/config/ram">
+
+        <h2>Select RAM</h2>
+
+        <select name="ram">
+            {% for ram in rams %}
+                <option value="{{ ram.id }}" {% if ram.id == session.ram %} selected {% endif %}>
+                    {{ ram.name }} [{{ ram.type }} ram]
+                </option>
+            {% endfor %}
+        </select>
+
+        <button>Select RAM</button>
+
+    </form>
+
+{% endblock %}
+

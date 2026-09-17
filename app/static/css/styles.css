@@ -68,46 +68,35 @@ body > header {
 
 /* Page Headings -----------------------------------------------*/
 
-main > h1.welcome {
-    font-size: 5rem;
-    text-align: center;
-    margin-block: 5rem;
-}
-
-
-main > h2 {
+main h2 {
     font-size: 2rem;
     text-align: center;
-    margin-block: 2rem;
+    margin-bottom: 2rem;
 }
 
 
-/* Creature List --------------------------------------------------*/
+/* Config ----------------------------------------------------- */
 
-#creatures {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: 1fr;
+#config {
+    max-width: 30rem;
+    margin-inline: auto;
+    padding: 1rem;
+    border: 2px solid var(--border-col);
+    margin-bottom: 2rem;
+}
 
-    @media (width >= 500px) {
-        grid-template-columns: 1fr 1fr;
-    }
 
-    @media (width >= 800px) {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
+/* Forms ------------------------------------------------------ */
 
-    .creature {
-        padding: 1rem;
-
-        background-color: var(--back-col-dark);
-        border: 2px solid var(--border-col);
-        border-radius: 0.5rem;
-
-        h3 {
-            color: var(--accent-col);
-        }
-    }
+form {
+    max-width: 30rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid var(--border-col);
+    margin-bottom: 2rem;
 }
 
 

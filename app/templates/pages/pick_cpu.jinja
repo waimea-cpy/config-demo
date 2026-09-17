@@ -1,0 +1,29 @@
+{#=====================================================
+  Select CPU Form
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block content %}
+
+    {% include "partials/config.jinja" %}
+
+    <form method="post" action="/config/cpu">
+
+        <h2>Select CPU</h2>
+
+        <select name="cpu">
+            {% for cpu in cpus %}
+                <option value="{{ cpu.id }}" {% if cpu.id == session.cpu %} selected {% endif %}>
+                    {{ cpu.name }} [{{ cpu.socket }} socket]
+                </option>
+            {% endfor %}
+        </select>
+
+        <button>Select CPU</button>
+
+    </form>
+
+{% endblock %}
+

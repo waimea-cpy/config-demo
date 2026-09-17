@@ -1,5 +1,5 @@
 {#=====================================================
-  Welcome page
+  Config partial
 =====================================================#}
 
 {% extends 'pages/_base.jinja' %}
@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    <h1 class="welcome">Hello!</h1>
+    {% include 'partials/config.jinja'%}
 
 {% endblock %}
 

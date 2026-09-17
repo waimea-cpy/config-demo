@@ -1,0 +1,29 @@
+{#=====================================================
+  Select MB Form
+=====================================================#}
+
+{% extends 'pages/_base.jinja' %}
+
+
+{% block content %}
+
+    {% include "partials/config.jinja" %}
+
+    <form method="post" action="/config/mb">
+
+        <h2>Select Motherboard</h2>
+
+        <select name="mb">
+            {% for mb in mbs %}
+                <option value="{{ mb.id }}" {% if mb.id == session.mb %} selected {% endif %}>
+                    {{ mb.name }} [{{ mb.socket }} socket, {{ mb.ram }} ram]
+                </option>
+            {% endfor %}
+        </select>
+
+        <button>Select MB</button>
+
+    </form>
+
+{% endblock %}
+

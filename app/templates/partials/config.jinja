@@ -1,0 +1,14 @@
+{#=====================================================
+  Config partial
+=====================================================#}
+
+<div id="config">
+    <h2>Configuration</h2>
+
+    <ul>
+        <li>MB:  <strong>{{ mb.name  }}</strong>                     <a href="/config/mb">Edit</a>
+        <li>CPU: <strong>{{ cpu.name }}</strong> {% if session.mb %} <a href="/config/cpu">Edit</a> {% endif %}
+        <li>RAM: <strong>{{ ram.name }}</strong> {% if session.mb %} <a href="/config/ram">Edit</a> {% endif %}
+    </ul>
+</div>
+
